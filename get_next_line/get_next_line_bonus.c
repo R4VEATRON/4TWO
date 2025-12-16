@@ -6,106 +6,103 @@
 /*   By: aelsafi <aelsafi@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 16:50:34 by aelsafi           #+#    #+#             */
-/*   Updated: 2025/12/16 16:50:38 by aelsafi          ###   ########.fr       */
+/*   Updated: 2025/12/16 17:19:04 by aelsafi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*free_all(char *buffer, char *unread_data)
+char	*get_next_line(int fd)
 {
-	free (buffer);
-	free (unread_data);
-	return (NULL);
+	static char	*stash[1024];
+	char		buffer[BUFFER_SIZE + 1];
+	char		*line;
+
+	if ((fd > 1024 || fd < 0) || BUFFER_SIZE <= 0)
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	stash[fd] = read_line(stash[fd], buffer, fd);
+	line = extract_line(stash[fd]);
+	stash[fd] = reset_stash(stash[fd]);
+	return (line);
 }
 
-static char	*read_until_newline(int fd, char *unread_data)
+char	*read_line(char *stash, char *buffer, int fd)
 {
-	char	*buffer;
 	int		bytes_read;
 	char	*temp;
 
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
 	bytes_read = 1;
-	while (!ft_strchr(unread_data, '\n') && bytes_read > 0)
+	while ((!stash || !ft_strchr(stash, '\n')) && bytes_read > 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-			return (free_all(buffer, unread_data));
+		{
+			if (stash)
+				free(stash);
+			return (NULL);
+		}
+		if (bytes_read == 0)
+			break ;
 		buffer[bytes_read] = '\0';
-		temp = ft_strjoin(unread_data, buffer);
-		if (!temp)
-			return (free_all(buffer, unread_data));
-		free(unread_data);
-		unread_data = temp;
+		temp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = temp;
+		if (!stash)
+			return (NULL);
 	}
-	free (buffer);
-	buffer = NULL;
-	return (unread_data);
+	if (bytes_read <= 0 && (!stash || stash[0] == '\0'))
+		return (free(stash), stash = NULL, NULL);
+	return (stash);
 }
 
-static char	*extract_line(char *unread_data)
+char	*extract_line(char *stash)
 {
-	size_t	line_len;
 	char	*line;
+	int		i;
 
-	line_len = 0;
-	if (!unread_data || *unread_data == '\0')
+	if (!stash)
 		return (NULL);
-	while (unread_data[line_len] && unread_data[line_len] != '\n')
-		line_len++;
-	if (unread_data[line_len] == '\n')
-		line_len++;
-	line = ft_substr(unread_data, 0, line_len);
-	return (line);
-}
-
-static char	*update_unread_data(char *unread_data)
-{
-	size_t	i;
-	char	*new_data;
-
-	if (!unread_data || *unread_data == '\0')
-	{
-		free(unread_data);
-		return (NULL);
-	}
 	i = 0;
-	while (unread_data[i] && unread_data[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
-	new_data = ft_substr(unread_data, i + 1, ft_strlen(unread_data) - i - 1);
-	free(unread_data);
-	if (!new_data || *new_data == '\0')
+	if (stash[i] == '\n')
+		i++;
+	line = malloc(i + 1);
+	if (!line)
 	{
-		free(new_data);
-		new_data = NULL;
+		free(stash);
+		stash = NULL;
+		return (NULL);
 	}
-	return (new_data);
+	ft_strlcpy(line, stash, i + 1);
+	return (line);
 }
 
-char	*get_next_line(int fd)
+char	*reset_stash(char *stash)
 {
-	static char	*unread_data[1024];
-	char		*line;
+	char	*new_stash;
+	char	*nl_position;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= INT_MAX)
+	new_stash = NULL;
+	if (!stash)
 		return (NULL);
-	unread_data[fd] = read_until_newline(fd, unread_data[fd]);
-	if (!unread_data[fd] || *unread_data[fd] == '\0')
+	nl_position = ft_strchr(stash, '\n');
+	if (!nl_position)
 	{
-		free(unread_data[fd]);
-		unread_data[fd] = NULL;
+		free(stash);
+		stash = NULL;
 		return (NULL);
 	}
-	line = extract_line(unread_data[fd]);
-	if (line == NULL)
+	if (*(nl_position + 1))
 	{
-		free(unread_data[fd]);
-		unread_data[fd] = NULL;
+		new_stash = ft_strdup(nl_position + 1);
+		if (!new_stash)
+		{
+			free(stash);
+			stash = NULL;
+			return (NULL);
+		}
 	}
-	else
-		unread_data[fd] = update_unread_data(unread_data[fd]);
-	return (line);
+	free(stash);
+	return (new_stash);
 }
