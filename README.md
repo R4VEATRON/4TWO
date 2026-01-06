@@ -2,4 +2,4 @@ HEYO!!
 
 THAT'S MY 42 STUFF, SO UNLESS UR HERE TO HELP URSELF UNDERSTAND WITHOUT CHEATING AND COPYING, GET OUTTA HERE PUNK!!!
 
-(PS. if that's "my knight" ibra who opened the repo, then i FIREBALL UR ASS OUTTA HERE!!!)
+(PS. if that's a specific someone who opened the repo, then i FIREBALL UR ASS OUTTA HERE!!!)
