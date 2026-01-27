@@ -66,7 +66,7 @@ Justification:
 
 ---
 
-## Bonus Part (if implemented)
+## Bonus Part
 
 The bonus version of get_next_line:
 
@@ -80,8 +80,6 @@ Bonus files:
 - get_next_line_bonus.c
 - get_next_line_utils_bonus.c
 - get_next_line_bonus.h
-
-The bonus part is evaluated only if the mandatory part is fully correct.
 
 ---
 
