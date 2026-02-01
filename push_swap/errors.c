@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.c                                        :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aelsafi <aelsafi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/30 16:23:45 by aelsafi           #+#    #+#             */
-/*   Updated: 2026/01/30 16:27:22 by aelsafi          ###   ########.fr       */
+/*   Created: 2026/01/30 16:28:51 by aelsafi           #+#    #+#             */
+/*   Updated: 2026/01/30 16:28:53 by aelsafi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	main(int ac, char **av)
+void	error_exit(t_stack **a)
 {
-	t_stack	*a;
-
-	a = NULL;
-	if (ac < 2)
-		return (0);
-	if (!parse_args(ac, av, &a))
-		error_exit(&a);
-	if (is_sorted(a))
-	{
-		free_stack(&a);
-		return (0);
-	}
-	free_stack(&a);
-	return (0);
+	free_stack(a);
+	write(2, "Error\n", 6);
+	exit(1);
 }
