@@ -4,141 +4,144 @@
 
 ## Description
 
-The **push_swap** project is an algorithmic challenge whose goal is to sort a stack of integers using a limited set of instructions and the smallest possible number of operations.
+Push_swap is an algorithmic sorting project where the objective is to sort a stack of unique integers using two stacks (a and b) and a restricted set of allowed operations. The goal is not only to sort the numbers in ascending order but to do so using the smallest possible number of instructions.
 
-The program receives a list of unique integers, stores them in stack **a**, and must output a sequence of instructions that sorts the stack in ascending order using a second stack **b**.  
-This project focuses on algorithm design, complexity optimization, and rigorous handling of edge cases while respecting the constraints of the 42 Norm.
+The program must compute and display the shortest possible sequence of valid stack operations that result in a sorted stack a, with the smallest number positioned at the top.
+
+This project emphasizes algorithm design, computational complexity, optimization strategies, parsing robustness, and strict memory management in C while complying with the 42 Norm.
 
 ---
 
 ## Instructions
 
-### Files
-
-Mandatory files:
-- Makefile
-- *.c
-- *.h
-
-Bonus files (if implemented):
-- checker program source files
-
 ### Program Name
 
 push_swap
 
+### Files to Submit
+
+- Makefile  
+- *.c  
+- *.h  
+
+### Makefile Requirements
+
+The Makefile must:
+
+- Compile using: -Wall -Wextra -Werror  
+- Contain the rules: NAME, all, clean, fclean, re  
+- Not relink unnecessarily  
+
 ### Compilation
 
-The project must compile using the following flags:
-
-cc -Wall -Wextra -Werror
-
-The Makefile must contain at least the following rules:
-- NAME
-- all
-- clean
-- fclean
-- re
+cc -Wall -Wextra -Werror *.c
 
 ### Execution
 
 ./push_swap <list_of_integers>
 
 Example:
+
 ./push_swap 2 1 3 6 5 8
 
-### Behavior
+### Behavior Rules
 
-- Stack **a** is initialized with the given integers (first argument is at the top)
-- Stack **b** starts empty
-- The program outputs a list of instructions, each followed by a newline
-- If no arguments are given, the program outputs nothing
+- Stack a is initialized with the given integers (first argument is at the top)
+- Stack b starts empty
+- The program prints a list of instructions separated by newline characters
+- If no arguments are given, the program prints nothing
 - In case of error, the program prints "Error" followed by a newline on standard error
 
-Errors include:
+### Error Cases
+
 - Non-integer arguments
 - Integer overflow
-- Duplicate values
-- Invalid input format
+- Duplicate numbers
+- Invalid formatting
 
 ---
 
 ## Allowed Operations
 
-- sa : swap the first two elements of stack a
-- sb : swap the first two elements of stack b
-- ss : sa and sb simultaneously
-- pa : push the top element of stack b onto stack a
-- pb : push the top element of stack a onto stack b
-- ra : rotate stack a upwards
-- rb : rotate stack b upwards
-- rr : ra and rb simultaneously
-- rra : reverse rotate stack a
-- rrb : reverse rotate stack b
-- rrr : rra and rrb simultaneously
+- sa : swap the first two elements of stack a  
+- sb : swap the first two elements of stack b  
+- ss : perform sa and sb simultaneously  
+- pa : push the top element of stack b onto stack a  
+- pb : push the top element of stack a onto stack b  
+- ra : rotate stack a upwards (first element becomes last)  
+- rb : rotate stack b upwards  
+- rr : perform ra and rb simultaneously  
+- rra : reverse rotate stack a  
+- rrb : reverse rotate stack b  
+- rrr : perform rra and rrb simultaneously  
 
 ---
 
 ## Algorithm Explanation and Justification
 
-The algorithm adapts its strategy depending on the number of elements to sort.
+The algorithm adapts depending on the number of elements to sort.
 
-Algorithm overview:
+1. Parsing and validation:
+   - Parse all arguments
+   - Detect duplicates and integer overflow
+   - Handle errors correctly
 
-1. Parse and validate all input arguments
-2. Reject invalid input, duplicates, or integer overflows
-3. Assign indexes to values based on sorted order to simplify comparisons
-4. Use optimized hardcoded strategies for very small stacks (2 to 5 elements)
-5. For larger stacks:
-   - Push elements from stack a to stack b using a cost-based or chunk-based approach
-   - Choose moves that minimize the total number of operations
-6. Push elements back from stack b to stack a in sorted order
-7. Rotate stack a so the smallest element is at the top
+2. Indexing:
+   - Replace values with their sorted indexes to simplify comparisons
+
+3. Small stack handling:
+   - For stacks of size 2–5, apply optimized hardcoded instruction sequences
+   - Guarantees minimal operations
+
+4. Large stack strategy:
+   - Divide elements into chunks or calculate movement costs
+   - Push elements from stack a to stack b strategically
+   - Minimize rotations by calculating optimal move combinations
+   - Reinsert elements from stack b back to stack a in sorted order
+
+5. Final alignment:
+   - Rotate stack a until the smallest element is at the top
 
 Justification:
 
 - Indexing reduces comparison complexity
-- Separating small and large cases minimizes unnecessary operations
-- Cost-based decisions significantly reduce total instruction count
-- The algorithm meets the benchmark constraints required for project validation
+- Separating small and large cases ensures optimal performance
+- Cost-based or chunk-based strategies minimize total operations
+- The algorithm satisfies benchmark constraints required for full validation
 
 ---
 
-## Benchmark
+## Benchmark Requirements
 
-To validate the project:
+For full validation (100%):
 
-- Sort 100 random numbers in fewer than 700 operations
-- Sort 500 random numbers in fewer than 5500 operations
+- 100 numbers sorted in fewer than 700 operations  
+- 500 numbers sorted in fewer than 5500 operations  
 
-Minimum validation is achieved with higher, but still limited, operation counts as defined in the subject.
+For minimal validation:
+
+- 100 numbers under 1100 operations and 500 numbers under 8500 operations  
+- OR other accepted combinations defined in the subject  
+
+All benchmarks are verified during evaluation.
 
 ---
 
-## Bonus Part
+## Submission and Evaluation
 
-The bonus consists of implementing a **checker** program.
-
-Checker behavior:
-- Takes the initial stack as arguments
-- Reads instructions from standard input
-- Executes them on the stacks
-- Displays:
-  - "OK" if stack a is sorted and stack b is empty
-  - "KO" otherwise
-  - "Error" in case of invalid input or instructions
-
-The bonus part is evaluated only if the mandatory part is fully correct and all benchmarks are passed.
+- Only files inside the Git repository are evaluated
+- File names must match required names exactly
+- Memory leaks, crashes, or norm errors result in failure
+- During evaluation, small modifications may be requested to verify understanding
 
 ---
 
 ## Resources
 
-- Stack data structure: https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
-- Algorithm complexity: https://en.wikipedia.org/wiki/Analysis_of_algorithms
-- Official 42 subject PDF and intranet documentation
+- Stack (abstract data type): https://en.wikipedia.org/wiki/Stack_(abstract_data_type)  
+- Algorithm complexity analysis: https://en.wikipedia.org/wiki/Analysis_of_algorithms  
+- Official 42 subject and intranet documentation  
 
 ### AI Usage
 
-AI tools were used exclusively for understanding project requirements, clarifying algorithmic concepts, and structuring documentation.  
-All parsing logic, algorithm design, optimization choices, and code implementation were done manually and fully understood, in compliance with the 42 AI usage policy.
+AI tools were used only for clarification of project requirements, reviewing algorithmic concepts, and structuring documentation. All parsing logic, data structure implementation, sorting strategy design, and optimization decisions were implemented manually and fully understood, in accordance with 42 AI usage guidelines.

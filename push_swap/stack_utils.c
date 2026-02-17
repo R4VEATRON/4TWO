@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aelsafi <aelsafi@student.42.fr>            +#+  +:+       +#+        */
+/*   By: aelsafi <aelsafi@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/30 16:28:12 by aelsafi           #+#    #+#             */
-/*   Updated: 2026/01/30 16:28:21 by aelsafi          ###   ########.fr       */
+/*   Created: 2026/02/12 16:33:12 by aelsafi           #+#    #+#             */
+/*   Updated: 2026/02/12 16:33:15 by aelsafi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,66 +14,60 @@
 
 t_stack	*stack_new(int value)
 {
-	t_stack	*node;
+	t_stack	*new;
 
-	node = malloc(sizeof(t_stack));
-	if (!node)
+	new = malloc(sizeof(t_stack));
+	if (!new)
 		return (NULL);
-	node->value = value;
-	node->index = -1;
-	node->next = NULL;
-	return (node);
+	new->value = value;
+	new->index = -1;
+	new->next = NULL;
+	return (new);
 }
 
 void	stack_add_back(t_stack **stack, t_stack *new)
 {
-	t_stack	*tmp;
+	t_stack	*bottom;
 
+	if (!new)
+		return ;
 	if (!*stack)
 	{
 		*stack = new;
 		return ;
 	}
-	tmp = *stack;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+	bottom = *stack;
+	while (bottom->next)
+		bottom = bottom->next;
+	bottom->next = new;
 }
 
 int	stack_size(t_stack *stack)
 {
-	int	i;
+	int	size;
 
-	i = 0;
+	size = 0;
 	while (stack)
 	{
-		i++;
+		size++;
 		stack = stack->next;
 	}
-	return (i);
-}
-
-int	is_sorted(t_stack *stack)
-{
-	if (!stack)
-		return (1);
-	while (stack->next)
-	{
-		if (stack->value > stack->next->value)
-			return (0);
-		stack = stack->next;
-	}
-	return (1);
+	return (size);
 }
 
 void	free_stack(t_stack **stack)
 {
 	t_stack	*tmp;
+	t_stack	*current;
 
-	while (*stack)
+	if (!stack)
+		return ;
+	current = *stack;
+	while (current)
 	{
-		tmp = (*stack)->next;
-		free(*stack);
-		*stack = tmp;
+		tmp = current->next;
+		free(current);
+		current = tmp;
 	}
+	*stack = NULL;
 }
